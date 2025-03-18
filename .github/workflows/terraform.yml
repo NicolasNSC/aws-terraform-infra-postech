@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - '**' 
+    paths:
+      - 'infra-tech-challenge/**'
   pull_request:
     branches:
       - '**'  
+    paths:
+      - 'infra-tech-challenge/**'
     
 jobs:
   terraform:
