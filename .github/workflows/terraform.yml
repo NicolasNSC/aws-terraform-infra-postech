@@ -1,0 +1,58 @@
+name: "Terraform Workflow"
+
+on:
+  push:
+    branches:
+      - '**' 
+    paths:
+      - 'infra-tech-challenge/**'
+  pull_request:
+    branches:
+      - '**'  
+    paths:
+      - 'infra-tech-challenge/**'
+    
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: '${{ secrets.AWS_ACCESS_KEY_ID }}'
+          aws-secret-access-key: '${{ secrets.AWS_SECRET_ACCESS_KEY }}'
+          aws-session-token: '${{ secrets.AWS_SESSION_TOKEN }}'
+          aws-region: '${{ secrets.AWS_REGION }}'
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.3
+      
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: ./infra-tech-challenge
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+        working-directory: ./infra-tech-challenge
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan
+        working-directory: ./infra-tech-challenge
+        continue-on-error: true 
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve
+        working-directory: ./infra-tech-challenge
