@@ -1,4 +1,4 @@
-module "eks_example_eks-auto-mode" {
+module "eks" {
     source = "../../modules/eks"
 
     cluster_name = "tech-challenger-fast-food"
