@@ -3,6 +3,21 @@ variable "cluster_name" {
   type        = string
 }
 
+variable "cluster_arn" {
+  description = "ARN do cluster EKS"
+  type        = string
+}
+
+variable "cluster_version" {
+  description = "Versão do cluster EKS"
+  type        = string
+}
+
+variable "node_iam_role_arn" {
+  description = "ARN da Role IAM para os nodes"
+  type        = string
+}
+
 variable "vpc_id" {
   description = "ID da VPC existente"
   type        = string

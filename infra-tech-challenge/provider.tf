@@ -9,10 +9,7 @@ terraform {
   required_version = ">= 1.0.0"
 }
 
-
-
 provider "aws" {
-  
   assume_role {
     role_arn = "arn:aws:iam::923490220058:role/LabRole"
   }
