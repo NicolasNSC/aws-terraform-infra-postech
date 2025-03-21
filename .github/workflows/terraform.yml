@@ -4,14 +4,10 @@ on:
   push:
     branches:
       - '**' 
-    paths:
-      - 'infra-tech-challenge/**'
   pull_request:
     branches:
       - '**'  
-    paths:
-      - 'infra-tech-challenge/**'
-    
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
@@ -39,20 +35,20 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
-        working-directory: ./infra-tech-challenge
+        working-directory: ./modules/eks
 
       - name: Terraform Validate
         id: validate
         run: terraform validate
-        working-directory: ./infra-tech-challenge
+        working-directory: ./modules/eks
 
       - name: Terraform Plan
         id: plan
         run: terraform plan
-        working-directory: ./infra-tech-challenge
+        working-directory: ./modules/eks
         continue-on-error: true 
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
-        working-directory: ./infra-tech-challenge
+        working-directory: ./modules/eks
