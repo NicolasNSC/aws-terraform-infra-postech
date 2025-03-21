@@ -30,7 +30,7 @@ resource "aws_eks_cluster" "cluster" {
   compute_config {
     enabled       = true
     node_pools    = ["general-purpose", "system"]
-    node_role_arn = "arn:aws:iam::923490220058:role/LabRole"
+    node_role_arn = "arn:aws:iam::342519815167:role/LabRole"
   }
 
   kubernetes_network_config {
