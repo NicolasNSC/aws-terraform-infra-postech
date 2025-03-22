@@ -35,20 +35,20 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
-        working-directory: ./modules/eks
+        working-directory: ./modules/*
 
       - name: Terraform Validate
         id: validate
         run: terraform validate
-        working-directory: ./modules/eks
+        working-directory: ./modules/*
 
       - name: Terraform Plan
         id: plan
         run: terraform plan
-        working-directory: ./modules/eks
+        working-directory: ./modules/*
         continue-on-error: true 
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
-        working-directory: ./modules/eks
+        working-directory: ./modules/*
