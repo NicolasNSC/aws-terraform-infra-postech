@@ -6,6 +6,7 @@ on:
       working_directory:
         description: "Caminho do diretório desejado para executar o Terraform"
         required: true
+        type: string
 
 jobs:
   checkout:
