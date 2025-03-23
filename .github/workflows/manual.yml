@@ -2,7 +2,6 @@ name: Manual workflow
 
 on:
   workflow_dispatch:
-   
     inputs:
       working_dir:
         description: 'Caminho do diretório de trabalho do Terraform'
@@ -13,16 +12,16 @@ on:
           - ./eks
 
 jobs:
-  terraform:
+  checkout:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+  configure_aws:
+    runs-on: ubuntu-latest
+    needs: checkout
+    steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -31,28 +30,45 @@ jobs:
           aws-session-token: '${{ secrets.AWS_SESSION_TOKEN }}'
           aws-region: '${{ secrets.AWS_REGION }}'
 
+  setup_terraform:
+    runs-on: ubuntu-latest
+    needs: configure_aws
+    steps:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.8.3
-      
+
+  terraform_init:
+    runs-on: ubuntu-latest
+    needs: setup_terraform
+    steps:
       - name: Terraform Init
-        id: init
         run: terraform init
         working-directory: '${{ github.event.inputs.working_dir }}'
 
+  terraform_validate:
+    runs-on: ubuntu-latest
+    needs: terraform_init
+    steps:
       - name: Terraform Validate
-        id: validate
         run: terraform validate
         working-directory: '${{ github.event.inputs.working_dir }}'
 
+  terraform_plan:
+    runs-on: ubuntu-latest
+    needs: terraform_validate
+    steps:
       - name: Terraform Plan
-        id: plan
         run: terraform plan
         working-directory: '${{ github.event.inputs.working_dir }}'
-        continue-on-error: true 
+        continue-on-error: true
 
+  terraform_apply:
+    runs-on: ubuntu-latest
+    needs: terraform_plan
+    if: github.ref == 'refs/heads/main'
+    steps:
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
         working-directory: '${{ github.event.inputs.working_dir }}'
