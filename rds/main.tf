@@ -3,7 +3,7 @@ module "rds_db_instance" {
   version = "6.11.0"
 
   engine = "postgres"
-  engine_version = "17.4"
+  engine_version = "16.8"
 
   identifier = "tech-challenger-fast-food-db"
   # Recupera username e password do Secrets Manager
@@ -11,7 +11,7 @@ module "rds_db_instance" {
   password = jsondecode(data.aws_secretsmanager_secret_version.postech-fast-food_credentials.secret_string)["password"]
   
   publicly_accessible = true
-  instance_class = "db.t2.micro"  
+  instance_class = "db.m7g.large"  
   allocated_storage = 10
   backup_retention_period = 7
   storage_encrypted = false
