@@ -41,7 +41,7 @@ jobs:
 
   terraform_init:
     runs-on: ubuntu-latest
-    needs: setup_terraform
+    needs: [ setup_terraform, checkout, configure_aws ]
     steps:
       - name: Terraform Init
         run: terraform init
