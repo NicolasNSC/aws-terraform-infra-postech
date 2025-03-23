@@ -4,9 +4,12 @@ on:
   workflow_dispatch: 
     inputs:
       working_dir: 
-        type: string
         description: "Caminho do diretório de trabalho do Terraform"
         required: true
+        type: choice
+        options:
+          - ./rds
+          - ./eks
 
 jobs:
   terraform:
