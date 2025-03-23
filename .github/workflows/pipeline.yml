@@ -24,4 +24,4 @@ jobs:
 
       - name: Print Working Directory
         run: |
-          echo "Working Directory: ${{ github.event.inputs.working_directory }}"
+          echo "Working Directory: ${{ github.event.commits }}"
