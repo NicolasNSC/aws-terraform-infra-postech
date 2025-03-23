@@ -42,7 +42,7 @@ jobs:
     steps:
       - name: Terraform Init
         run: terraform init
-        working-directory: modules\rds
+        working-directory: modules/rds
 
   terraform-validate:
     runs-on: ubuntu-latest
