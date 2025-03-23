@@ -16,7 +16,7 @@ module "rds_db_instance" {
   backup_retention_period = 7
   storage_encrypted = false
   backup_window = "03:00-04:00"
-  db_subnet_group_name = "eks-cluster-sg-tech-challenger-fast-food-1765286440"
+  db_subnet_group_name = "default"
   
 }
 
