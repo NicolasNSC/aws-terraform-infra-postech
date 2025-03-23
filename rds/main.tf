@@ -7,8 +7,8 @@ module "rds_db_instance" {
 
   identifier = "tech-challenger-fast-food-db"
   # Recupera username e password do Secrets Manager
-  username = jsondecode(data.aws_secretsmanager_secret_version.rds_credentials.secret_string)["username"]
-  password = jsondecode(data.aws_secretsmanager_secret_version.rds_credentials.secret_string)["password"]
+  username = jsondecode(data.aws_secretsmanager_secret_version.postech-fast-food_credentials.secret_string)["username"]
+  password = jsondecode(data.aws_secretsmanager_secret_version.postech-fast-food_credentials.secret_string)["password"]
   
   publicly_accessible = true
   instance_class = "db.t2.micro"  
