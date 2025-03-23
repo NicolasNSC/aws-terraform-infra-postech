@@ -2,7 +2,6 @@ name: Manual workflow
 
 on:
   workflow_dispatch:
-   
     inputs:
       working_dir:
         description: 'Caminho do diretório de trabalho do Terraform'

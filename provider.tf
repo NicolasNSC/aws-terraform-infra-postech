@@ -20,4 +20,3 @@ module "eks" {
     aws = aws
   }
 }
-
