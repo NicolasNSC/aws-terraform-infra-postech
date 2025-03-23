@@ -1,6 +1,12 @@
 name: "Terraform Workflow"
 
 on:
+  workflow_dispatch: 
+    inputs:
+      working_dir: 
+        type: string
+        description: "Caminho do diretório de trabalho do Terraform"
+        required: true
   push:
     branches:
       - '**' 
@@ -35,20 +41,20 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform init
-        working-directory: ./rds
+        working-directory: '${{ github.event.inputs.working_dir }}'
 
       - name: Terraform Validate
         id: validate
         run: terraform validate
-        working-directory: ./rds
+        working-directory: '${{ github.event.inputs.working_dir }}'
 
       - name: Terraform Plan
         id: plan
         run: terraform plan
-        working-directory: ./rds
+        working-directory: '${{ github.event.inputs.working_dir }}'
         continue-on-error: true 
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
-        working-directory: ./rds
+        working-directory: '${{ github.event.inputs.working_dir }}'
