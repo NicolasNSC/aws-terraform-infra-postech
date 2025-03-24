@@ -56,12 +56,30 @@ jobs:
         run: terraform apply -auto-approve
         working-directory: '${{ github.event.inputs.working_dir }}'
       
+      - name: Get Terraform Outputs
+        id: terraform-outputs
+        if: github.event.inputs.working_dir == './eks' && github.ref == 'refs/heads/main'
+        run: |
+          cluster_id=$(terraform output -raw cluster_id || echo "")
+          echo "cluster_id=$cluster_id" >> $GITHUB_OUTPUT
+        working-directory: '${{ github.event.inputs.working_dir }}'
+      
       - name: Trigger API Deployment
         run: |
           # Set the required variables
           repo_owner=${{ secrets.GH_API_REPO_OWNER }}
           repo_name=${{ secrets.GH_API_REPO_NAME }}
-          event_type="trigger-workflow" 
+          event_type="trigger-workflow"
+          
+          # Get cluster_id if available (when working_dir is ./eks)
+          cluster_id="${{ steps.terraform-outputs.outputs.cluster_id }}"
+          
+          # Prepare payload based on whether cluster_id is available
+          if [ "${{ github.event.inputs.working_dir }}" == "./eks" ] && [ -n "$cluster_id" ]; then
+            payload="{\"event_type\": \"$event_type\", \"client_payload\": {\"message\": \"Trigger deploy\", \"cluster_id\": \"$cluster_id\"}}"
+          else
+            payload="{\"event_type\": \"$event_type\", \"client_payload\": {\"message\": \"Trigger deploy\"}}"
+          fi
   
           curl -L \
             -X POST \
@@ -69,6 +87,6 @@ jobs:
             -H "Authorization: Bearer ${{ secrets.PAT_GH_ACCESS_TOKEN }}" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/$repo_owner/$repo_name/dispatches \
-            -d "{\"event_type\": \"$event_type\", \"client_payload\": {\"message\": \"Trigger deploy\"}}"
+            -d "$payload"
 
         
