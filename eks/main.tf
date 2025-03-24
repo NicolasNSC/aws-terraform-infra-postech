@@ -1,4 +1,15 @@
+# Data source to check if the cluster already exists
+data "aws_eks_cluster" "existing_cluster" {
+  count = length(data.aws_eks_clusters.all.names) > 0 && contains(data.aws_eks_clusters.all.names, "tech-challenger-fast-food") ? 1 : 0
+  name  = "tech-challenger-fast-food"
+}
+
+# Get all EKS clusters
+data "aws_eks_clusters" "all" {}
+
 resource "aws_eks_cluster" "cluster" {
+  # Only create if the cluster doesn't exist
+  count    = length(data.aws_eks_cluster.existing_cluster) == 0 ? 1 : 0
   name     = "tech-challenger-fast-food"
   role_arn = "arn:aws:iam::342519815167:role/LabRole"
   version  = "1.32"
@@ -44,4 +55,10 @@ resource "aws_eks_cluster" "cluster" {
       enabled = true
     }
   }
+}
+
+# Create a local resource to reference the cluster regardless of whether it was created or already existed
+locals {
+  cluster_name = length(data.aws_eks_cluster.existing_cluster) > 0 ? data.aws_eks_cluster.existing_cluster[0].name : (length(aws_eks_cluster.cluster) > 0 ? aws_eks_cluster.cluster[0].name : "")
+  cluster_id   = length(data.aws_eks_cluster.existing_cluster) > 0 ? data.aws_eks_cluster.existing_cluster[0].id : (length(aws_eks_cluster.cluster) > 0 ? aws_eks_cluster.cluster[0].id : "")
 }
