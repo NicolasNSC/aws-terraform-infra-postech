@@ -19,8 +19,6 @@ Para utilizar este repositório, é necessário:
 2. Adicione o caminho do módulo na **seleção de opções do workflow manual** no GitHub.
 3. Execute a pipeline para provisionar o recurso desejado utilizando Terraform.
 
-A pipeline automatizada garante que o provisionamento seja realizado de forma segura e padronizada, seguindo as melhores práticas de DevOps.
-
 ---
 
 ### **Execução opcional (local)**
